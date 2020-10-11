@@ -1,0 +1,20 @@
+{
+  "name": "shoping-cart",
+  "version": "1.0.0",
+  "description": "JS , HTML ,CSS  responsive Shopping cart",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raku1089/shopingCart.git"
+  },
+  "keywords": [],
+  "author": "Rakesh Kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raku1089/shopingCart/issues"
+  },
+  "homepage": "https://github.com/raku1089/shopingCart#readme"
+}
