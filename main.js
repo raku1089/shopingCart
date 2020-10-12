@@ -1,4 +1,3 @@
-let carts = document.querySelectorAll(".add-cart");
 let product = {
   items: [
     {
@@ -91,6 +90,7 @@ let product = {
     },
   ],
 };
+// TODO: using HTTp make API call
 // const fetchProducts = async () => {
 //   if (!localStorage.getItem("products")) {
 //     const url = "./api/cart.json";
@@ -104,17 +104,16 @@ let product = {
 // };
 
 // fetchProducts();
-
-let cartProducts = document.querySelector(".container");
-
 const loadProducts = (product) => {
-  if (product.items && product.items.length) {
-    product.items.map((item) => {
-      cartProducts.innerHTML += `
+  let cartProducts = document.querySelector(".container");
+  // console.log("carts", carts);
+  if (cartProducts) {
+    if (product.items && product.items.length) {
+      product.items.map((item) => {
+        cartProducts.innerHTML += `
     <div class="item">
         <div class="imageWrapper">
           <div class="discount">${item.discount}%</div>
-
           <img
             src=${item.image}
             alt="item1"
@@ -131,18 +130,39 @@ const loadProducts = (product) => {
         </div>
       </div>
     `;
-    });
-  } else {
-    cartProducts.innerHTML += `<h5 class="fail"> Somthing went Wrong</h5>`;
+      });
+    } else {
+      cartProducts.innerHTML += `<h5 class="fail"> Somthing went Wrong</h5>`;
+    }
   }
 };
+
+loadProducts(product);
+
+let carts = document.querySelectorAll(".add-cart");
+
+let popup = document.querySelector(".message");
+const attachEvents = () => {
+  for (let i = 0; i < carts.length; i++) {
+    carts[i].addEventListener("click", () => {
+      cartNumbers(product.items[i]);
+      totalCost(product.items[i].price);
+    });
+  }
+};
+
+attachEvents();
 
 const onLoadCartcartNumbers = () => {
   const productNumbers = localStorage.getItem("cartNumbers") || 0;
   document.querySelector(".cart span").textContent = productNumbers;
 };
-
 const cartNumbers = (product) => {
+  popup.style.display = "block";
+  popup.innerHTML = "<div class='info'>Added to cart Successfully! </div>";
+  setTimeout(() => {
+    popup.innerHTML = "";
+  }, 3000);
   const productNumbers = localStorage.getItem("cartNumbers") || 0;
   localStorage.setItem("cartNumbers", +productNumbers + 1);
   onLoadCartcartNumbers();
@@ -188,48 +208,57 @@ const displayCart = () => {
   const cartTotalCost = JSON.parse(localStorage.getItem("totalCost"));
   const cartDiscount = JSON.parse(localStorage.getItem("toatlDiscount"));
   const cartActualCost = JSON.parse(localStorage.getItem("actualPrice"));
+  const cartItemCount = JSON.parse(localStorage.getItem("cartNumbers"));
   if (cartItem && productsConatiner) {
     productsConatiner.innerHTML = "";
     Object.values(cartItem).map((item) => {
       productsConatiner.innerHTML += `
-      <div class="product">
+      <div class="product content-position">
+      <div>
         <ion-icon name="close-circle"></ion-icon>
         <img src="${item.image}">
         <span>${item.name}</span>
         </div>
         
+        
         <div class="quantity">
-        <ion-icon class= "decrease" name="add-outline"></ion-icon>
-        <span>${item.inCart}</span>
+        <ion-icon class= "decrease" onclick="removeItem()" name="add-outline"></ion-icon>
+        <span class="cart-count">${item.inCart}</span>
         <ion-icon name="remove-outline">
         </ion-icon>
-        <div class="price" >$${item.price.actual}</div>
+        </div>
+        <div class="content-position" >$${item.price.actual}</div>
       </div>
       `;
     });
-    totalPriceConatiner.innerHTML += `<div class="cartPrice">
-    <div class='heading1'>Total</div>
-      <div class='item-price item-total'>
-        <div>Items(4)</div>
+    // use grid for css
+    totalPriceConatiner.innerHTML += `
+    
+    <div class="priceWrapper">
+    
+      
+      <div class='heading1'>Total</div>
+      <div></div>
+      <div></div>
+        <div>Items(${cartItemCount})</div>
         <div>:</div>
         <div>$${cartActualCost}</div>
-      </div>
-      <div class='item-price'>
+      
         <div>Discount</div>
         <div>:</div>
         <div>$-${cartDiscount}</div>
-      </div>
-      <div class='item-price'>
+      
         <div>Type Discont</div>
         <div>:</div>
         <div>$${0}</div>
-      </div>
-
-      <div class="cartTotal">
-        <div>Order Total</div>        
-        <div id='totalAmount'>$${cartTotalCost}</div>
-      </div>
-    </div>`;
+</div>
+<div class="order-toatl">
+        <div class="items">Order Total</div>    
+        <div class="items">=></div>    
+        <div id='totalAmount' class="items">$${cartTotalCost}</div>
+      
+</div>
+    `;
 
     // totalPriceConatiner.innerHTML += `
     // <div class="basketContainer">
@@ -239,8 +268,21 @@ const displayCart = () => {
     // <h4 class="basketDiscount">${cartDiscount}</h4>
     // </div>`;
   }
+  let removeItem = document.querySelector(".decrease");
+  for (let i = 0; i < Object.values(cartItem).length; i++) {}
 };
 
 onLoadCartcartNumbers();
-loadProducts(product);
 displayCart();
+
+// cart actions
+
+function removeItem(e) {
+  console.log(e, "product");
+}
+function addItem(product) {
+  console.log(product, "product addItem");
+}
+function removeProduct() {
+  console.log(product, "product...");
+}
